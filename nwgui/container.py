@@ -179,7 +179,7 @@ class TabbedContainer(Container):
         else:
             tabMargin = 3
 
-        self.tabRow = HorizontalContainer(width, 40, self.game, padding=(tabMargin, 0))
+        self.tabRow = HorizontalContainer(width, 40, root=self.root, padding=(tabMargin, 0))
         Container.add(self, self.tabRow)
         self.image = pygame.Surface(self.rect.size)
         self.image.fill( (255, 255, 255) )
@@ -202,7 +202,7 @@ class TabbedContainer(Container):
         widget.setPosition(self.rect.topleft)
 
         # add the extra widgets needed for the tabs
-        tab = Tab(self, tabName, self.game, padding=(15, 15), background=(100, 100, 100))
+        tab = Tab(self, tabName, root=self.root, padding=(15, 15), background=(100, 100, 100))
         self.tabRow.add(tab)
 
     def remove(self, tabName):

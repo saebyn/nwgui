@@ -17,14 +17,14 @@ class BaseButton:
             self.setActive()
 
 class Button(BaseButton, Label):
-    def __init__(self, text, callback, game, background=(100, 100, 100),
+    def __init__(self, text, callback, background=(100, 100, 100),
                        padding=(10, 10), *args, **kwargs):
         kwargs['background'] = background
         kwargs['padding'] = padding
-        Label.__init__(self, text, game, *args, **kwargs)
+        Label.__init__(self, text, *args, **kwargs)
         BaseButton.__init__(self, callback)
 
-
 class ImageButton(Widget, BaseButton):
-    def __init__(self, callback, game, *args, **kwargs):
+    def __init__(self, callback, *args, **kwargs):
+        Widget.__init__(self, *args, **kwargs)
         BaseButton.__init__(self, callback)

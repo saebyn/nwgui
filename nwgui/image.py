@@ -4,8 +4,8 @@ import pygame
 from nwgui.widget import Widget
 
 class DirectImage(Widget):
-    def __init__(self, image, width, height, game):
-        Widget.__init__(self, width, height, game)
+    def __init__(self, image, width, height, *args, **kwargs):
+        Widget.__init__(self, width, height, *args, **kwargs)
 
         if image is None:
             self.image = pygame.Surface((0, 0))
@@ -26,8 +26,8 @@ class DirectImage(Widget):
             self.image = image
 
 class Image(Widget):
-    def __init__(self, sheetName, game):
-        self.image = game.getSheet('gui').get(sheetName)
+    def __init__(self, sheetName, root, *args, **kwargs):
+        self.image = root.game.getSpriteSource('gui').get(sheetName)
 
         Widget.__init__(self, self.image.get_width(), self.image.get_height(),
-                        game)
+                        root=root, *args, **kwargs)

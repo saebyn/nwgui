@@ -9,19 +9,19 @@ from nwgui.image import Image
 from nwgui.label import Label
 
 class Text(Container):
-    def __init__(self, text, width, height, game, background=(255, 255, 255), 
+    def __init__(self, text, width, height, background=(255, 255, 255), 
                        *args, **kwargs):
         kwargs['border'] = (1, (0, 0, 0))
-        Container.__init__(self, width, height, game, *args, **kwargs)
+        Container.__init__(self, width, height, *args, **kwargs)
         self.cursorPosition = 0
         self.text = ""
 
         self.textDisplayedBeginIndex = 0
         
-        self.cursor = Image('textcursor', game)
+        self.cursor = Image('textcursor', root=self.root)
         self.add(self.cursor)
 
-        self.label = Label('', game, fontSize=30)
+        self.label = Label('', root=self.root, fontSize=30)
         self.add(self.label)
 
     @property

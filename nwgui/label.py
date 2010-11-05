@@ -4,9 +4,9 @@ import pygame
 from nwgui.widget import Widget
 
 class Label(Widget):
-    def __init__(self, text, game, color=(0, 0, 0), background=(255, 255, 255), 
+    def __init__(self, text, color=(0, 0, 0), background=(255, 255, 255), 
                        padding=(0, 0), width=None, height=None, **kwargs):
-        Widget.__init__(self, 1, 1, game, **kwargs)
+        Widget.__init__(self, 1, 1, **kwargs)
 
         self.color = color
         self.background = background

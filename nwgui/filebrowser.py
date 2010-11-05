@@ -10,4 +10,4 @@ class FileBrowser(List):
 
         for filename in os.listdir(path):
             if os.path.isfile(os.path.join(path, filename)):
-                self.add(filename, Label(filename, self.game))
+                self.add(filename, Label(filename, root=self.root))
