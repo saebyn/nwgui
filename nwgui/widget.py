@@ -18,7 +18,7 @@ def deferUntilParent(method):
 
 class Widget(BaseWidget):
     def __init__(self, width, height, *args, **kwargs):
-        BaseWidget.__init__(self, *args, **kwargs)
+        super(Widget, self).__init__(*args, **kwargs)
 
         self.rect = pygame.Rect((0,0), (width, height))
 

@@ -11,10 +11,11 @@ import pygame
 from nwgui.renderers.pygame_renderer import PyGameRenderer
 
 class BaseWidget(pygame.sprite.Sprite):
-    def __init__(self, root, renderer=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         pygame.sprite.Sprite.__init__(self)
-        self.root = root
-        self.game = root.getGameObject()
+        self.root = kwargs.pop('root')
+        renderer = kwargs.pop('renderer', None)
+        self.game = self.root.getGameObject()
 
         if renderer is None:
             self._renderer = PyGameRenderer(self.game)
