@@ -58,6 +58,7 @@ class ButtonBar(Widget):
 
         self._bankContainers[name] = HorizontalContainer(self.rect.width, self.rect.height, root=self.root)
         self._bankContainers[name].setParent(self)
+        self._bankContainers[name].setPosition(self.rect.topleft)
         self._currentBank = name
 
     def switchBank(self, name):
@@ -67,6 +68,7 @@ class ButtonBar(Widget):
         self._bankContainers[name].hide()
         self._currentBank = name
         self._bankContainers[name].show()
+        self._bankContainers[name].setPosition(self.rect.topleft)
 
     def getBanks(self):
         return self._banks.keys()
