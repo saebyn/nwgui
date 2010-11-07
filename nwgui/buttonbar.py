@@ -70,6 +70,10 @@ class ButtonBar(Widget):
         self._bankContainers[name].show()
         self._bankContainers[name].setPosition(self.rect.topleft)
 
+    def clearBank(self, name):
+        self._bankContainers[name].removeAll()
+        self._banks[name] = {}
+
     def getBanks(self):
         return self._banks.keys()
 

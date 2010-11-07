@@ -112,6 +112,10 @@ class Container(Widget):
         self.widgets.remove(widget)
         widget.kill()
 
+    def removeAll(self):
+        for widget in self.widgets:
+            self.remove(widget)
+
     def kill(self):
         for widget in self.widgets:
             widget.kill()
