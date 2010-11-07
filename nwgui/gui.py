@@ -33,7 +33,7 @@ class AbstractGUI(object):
 
 class GUI(AbsoluteContainer, AbstractGUI):
     def __init__(self, game):
-        self.game = game
+        self._game = game
         AbsoluteContainer.__init__(self, game.screen.get_width(),
                                          game.screen.get_height(),
                                          self, root=self)
@@ -42,7 +42,7 @@ class GUI(AbsoluteContainer, AbstractGUI):
         self.names = {}
 
     def getGameObject(self):
-        return self.game
+        return self._game
 
     def get(self, widgetName):
         return self.names[widgetName]
@@ -71,7 +71,7 @@ class GUI(AbsoluteContainer, AbstractGUI):
             self.active = None
 
     def addSprite(self, sprite):
-        self.game.addGUISprite(sprite)
+        self._game.addGUISprite(sprite)
 
     def setName(self, name, widget):
         self.names[name] = widget

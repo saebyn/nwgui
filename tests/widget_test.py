@@ -1,13 +1,19 @@
 
 import unittest
 
+import pygame
+
 from nwgui.gui import GUI
 from nwgui.widget import Widget
 from nwgui.renderers.dummy_renderer import DummyRenderer
 
 class GameMock(object):
     def getSpriteSource(self, name):
-        return None
+        return SpriteSourceMock()
+
+class SpriteSourceMock(object):
+    def get(self, name):
+        return pygame.Surface((1,1))
 
 class GUIMock(object):
     def __init__(self):
