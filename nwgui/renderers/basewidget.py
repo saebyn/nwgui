@@ -18,7 +18,10 @@ class BaseWidget(pygame.sprite.Sprite):
         self.game = self.root.getGameObject()
 
         if renderer is None:
-            self._renderer = PyGameRenderer(self.game)
+            if hasattr(self.root, '_renderer'):
+                self._renderer = self.root._renderer
+            else:
+                self._renderer = PyGameRenderer(self.game)
         else:
             self._renderer = renderer
 

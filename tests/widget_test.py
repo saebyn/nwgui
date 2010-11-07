@@ -13,6 +13,7 @@ class GUIMock(object):
     def __init__(self):
         self.setNameValue = None
         self.activeWidget = None
+        self._renderer = DummyRenderer()
 
     def setName(self, name, widget):
         self.setNameValue = name

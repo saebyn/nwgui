@@ -26,8 +26,9 @@ class DirectImage(Widget):
             self.image = image
 
 class Image(Widget):
-    def __init__(self, sheetName, root, *args, **kwargs):
+    def __init__(self, sheetName, *args, **kwargs):
+        root = kwargs.get('root')
         self.image = root.game.getSpriteSource('gui').get(sheetName)
 
         Widget.__init__(self, self.image.get_width(), self.image.get_height(),
-                        root=root, *args, **kwargs)
+                        *args, **kwargs)

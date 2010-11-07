@@ -36,7 +36,7 @@ class GUI(AbsoluteContainer, AbstractGUI):
         self.game = game
         AbsoluteContainer.__init__(self, game.screen.get_width(),
                                          game.screen.get_height(),
-                                         self)
+                                         self, root=self)
         self.image = pygame.Surface((0,0))
         self.active = None
         self.names = {}

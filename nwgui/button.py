@@ -3,6 +3,7 @@ from pygame.locals import *
 
 from nwgui.label import Label
 from nwgui.widget import Widget
+from nwgui.image import Image
 
 class BaseButton:
     def __init__(self, callback):
@@ -22,6 +23,11 @@ class Button(BaseButton, Label):
         kwargs['background'] = background
         kwargs['padding'] = padding
         Label.__init__(self, text, *args, **kwargs)
+        BaseButton.__init__(self, callback)
+
+class SpriteButton(BaseButton, Image):
+    def __init__(self, sheetName, callback, *args, **kwargs):
+        Image.__init__(self, sheetName, *args, **kwargs)
         BaseButton.__init__(self, callback)
 
 class ImageButton(Widget, BaseButton):

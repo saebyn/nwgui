@@ -1,6 +1,9 @@
 
+import pygame
+
 from nwgui.widget import Widget
 from nwgui.container import HorizontalContainer
+from nwgui.button import SpriteButton
 
 from nwgui.util.ordereddict import OrderedDict
 
@@ -44,20 +47,41 @@ class ButtonBar(Widget):
         super(ButtonBar, self).__init__(*args, **kwargs)
         self._banks = {}
         self._currentBank = None
-        self._bankContainers = []
+        self._bankContainers = {}
+        self.image = pygame.Surface((1, 1))
     
     def addBank(self, name):
         self._banks[name] = OrderedDict()
+
+        if self._currentBank is not None:
+            self._bankContainers[self._currentBank].hide()
+
+        self._bankContainers[name] = HorizontalContainer(self.rect.width, self.rect.height, root=self.root)
+        self._bankContainers[name].setParent(self)
         self._currentBank = name
 
     def switchBank(self, name):
+        if not self._banks.has_key(name):
+            raise KeyError("No such bank: %s" % (name,))
+
+        self._bankContainers[name].hide()
         self._currentBank = name
+        self._bankContainers[name].show()
 
     def getBanks(self):
         return self._banks.keys()
 
-    def addButton(self, spriteName, callback=None):
-        self._banks[self._currentBank][spriteName] = callback
+    def addButton(self, spriteName, callback=None, bank=None):
+        if bank is None:
+            bank = self._currentBank
+
+        self._banks[bank][spriteName] = callback
+        buttonIndex = len(self._banks[bank]) - 1
+
+        def internalCallback():
+            self.activate(buttonIndex)
+
+        self._bankContainers[bank].add(SpriteButton(spriteName, internalCallback, root=self.root))
 
     def getButtons(self, bank=None):
         if bank is None:
@@ -69,3 +93,12 @@ class ButtonBar(Widget):
         name, func = self._banks[self._currentBank].items()[buttonIndex]
         if func is not None:
             return func(name)
+
+    def setPosition(self, position):
+        super(ButtonBar, self).setPosition(position)
+        for container in self._bankContainers.values():
+            container.setPosition(position)
+
+    def handleEvent(self, event):
+        if self._currentBank is not None:
+            self._bankContainers[self._currentBank].handleEvent(event)

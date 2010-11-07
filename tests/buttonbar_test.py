@@ -5,13 +5,10 @@ from nwgui.buttonbar import ButtonBar
 
 from widget_test import GameMock, GUIMock
 
-from nwgui.renderers.dummy_renderer import DummyRenderer
-
 class ButtonBarTest(unittest.TestCase):
     def _createWidget(self):
         guimock = GUIMock()
-        renderer = DummyRenderer()
-        return ButtonBar(100, 36, root=guimock, renderer=renderer)
+        return ButtonBar(100, 36, root=guimock)
 
     def testConstructorWorks(self):
         self._createWidget()
