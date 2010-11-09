@@ -5,8 +5,6 @@ from nwgui.widget import Widget
 from nwgui.container import HorizontalContainer
 from nwgui.button import SpriteButton
 
-from nwgui.util.ordereddict import OrderedDict
-
 class ButtonBar(Widget):
     """
     A horizontal bar which contains one or more banks of buttons.
@@ -34,10 +32,10 @@ class ButtonBar(Widget):
     >>> buttonbar.getCurrentBank()
     "main"
     >>> buttonbar.getButtons(bank="main")
-    {"spriteName1": None, "spriteName2": None, "spriteName4": None, "spriteName6": <function <lambda> at 0x...>}
+    [("spriteName1", None), ("spriteName2", None), ("spriteName4", None), ("spriteName6", <function <lambda> at 0x...>)]
     >>> buttonbar.switchBank("second")
     >>> buttonbar.getButtons()
-    {"spriteName3": <function <lambda> at 0x...>, "spriteName5": <function <lambda> at 0x...>}
+    [("spriteName3", <function <lambda> at 0x...>), ("spriteName5", <function <lambda> at 0x...>)]
     >>> buttonbar.activate(1)
     None
     >>> buttonbar.activate(2)
@@ -51,7 +49,7 @@ class ButtonBar(Widget):
         self.image = pygame.Surface((1, 1))
     
     def addBank(self, name):
-        self._banks[name] = OrderedDict()
+        self._banks[name] = []
 
         if self._currentBank is not None:
             self._bankContainers[self._currentBank].hide()
@@ -72,7 +70,7 @@ class ButtonBar(Widget):
 
     def clearBank(self, name):
         self._bankContainers[name].removeAll()
-        self._banks[name] = {}
+        self._banks[name] = []
 
     def getBanks(self):
         return self._banks.keys()
@@ -81,13 +79,16 @@ class ButtonBar(Widget):
         if bank is None:
             bank = self._currentBank
 
-        self._banks[bank][spriteName] = callback
+        self._banks[bank].append((spriteName, callback))
         buttonIndex = len(self._banks[bank]) - 1
 
         def internalCallback():
             self.activate(buttonIndex)
 
-        self._bankContainers[bank].add(SpriteButton(spriteName, internalCallback, root=self.root))
+        button = SpriteButton(spriteName, internalCallback, root=self.root)
+        self._bankContainers[bank].add(button)
+        if bank != self._currentBank:
+            button.hide()
 
     def getButtons(self, bank=None):
         if bank is None:
@@ -96,7 +97,7 @@ class ButtonBar(Widget):
         return self._banks[bank]
 
     def activate(self, buttonIndex):
-        name, func = self._banks[self._currentBank].items()[buttonIndex]
+        name, func = self._banks[self._currentBank][buttonIndex]
         if func is not None:
             return func(name)
 

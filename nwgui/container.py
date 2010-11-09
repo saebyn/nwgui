@@ -113,8 +113,8 @@ class Container(Widget):
         widget.kill()
 
     def removeAll(self):
-        for widget in self.widgets:
-            self.remove(widget)
+        for i in xrange(len(self.widgets) - 1, -1, -1):
+            self.remove(self.widgets[i])
 
     def kill(self):
         for widget in self.widgets:

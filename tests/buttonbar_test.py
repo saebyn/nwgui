@@ -26,14 +26,14 @@ class ButtonBarTest(unittest.TestCase):
         buttonbar = self._createWidget()
         buttonbar.addBank("name")
         buttonbar.addButton("buttonsprite")
-        self.assertTrue(buttonbar.getButtons().has_key("buttonsprite"))
+        self.assertTrue("buttonsprite" in map(lambda x: x[0], buttonbar.getButtons()))
 
     def testGetButtonsReturnsWithCallbacks(self):
         buttonbar = self._createWidget()
         buttonbar.addBank("name")
         callback = lambda name: None
         buttonbar.addButton("buttonsprite", callback=callback)
-        self.assertEqual(buttonbar.getButtons()["buttonsprite"], callback)
+        self.assertEqual(filter(lambda x: x[0]=="buttonsprite", buttonbar.getButtons())[0][1], callback)
 
     def testActivateDoesCurrentBank(self):
         buttonbar = self._createWidget()
@@ -72,5 +72,13 @@ class ButtonBarTest(unittest.TestCase):
         buttonbar.addBank("name2")
         buttonbar.addButton("buttonsprite2")
 
-        self.assertTrue(buttonbar.getButtons(bank="name").has_key("buttonsprite"))
-        
+        self.assertTrue("buttonsprite" in map(lambda x: x[0], buttonbar.getButtons(bank="name")))
+ 
+    def testClearBankRemovesAllWidgets(self):
+        buttonbar = self._createWidget()
+        buttonbar.addBank("name")
+        buttonbar.addButton("buttonsprite")
+        buttonbar.addButton("buttonsprite")
+        buttonbar.addButton("buttonsprite")
+        buttonbar.clearBank("name")
+        self.assertEqual(len(buttonbar._bankContainers["name"].widgets), 0)
