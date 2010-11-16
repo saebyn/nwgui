@@ -31,6 +31,9 @@ class AbstractGUI(object):
     def setInactive(self, widget):
         raise NotImplementedError
 
+    def isControlledPosition(self, position):
+        raise NotImplementedError
+
 class GUI(AbsoluteContainer, AbstractGUI):
     def __init__(self, game):
         self._game = game
@@ -75,3 +78,13 @@ class GUI(AbsoluteContainer, AbstractGUI):
 
     def setName(self, name, widget):
         self.names[name] = widget
+
+    def isControlledPosition(self, position):
+        for widget in self._game.guiSprites.sprites():
+            if widget is self:
+                continue
+
+            if widget.rect.collidepoint(position):
+                return True
+
+        return False

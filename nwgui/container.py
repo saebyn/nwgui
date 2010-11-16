@@ -33,8 +33,7 @@ class Container(Widget):
         # handle mouse events by deciding which widgets are in the clicked area
         for widget in self.widgets:
             if event.type in [MOUSEBUTTONDOWN, MOUSEMOTION, MOUSEBUTTONUP]:
-                if widget.rect.contains(pygame.Rect(pygame.mouse.get_pos(),
-                                                    (1, 1))):
+                if widget.rect.collidepoint(pygame.mouse.get_pos()):
                     widget.handleEvent(event)
             else:
                 widget.handleEvent(event)
