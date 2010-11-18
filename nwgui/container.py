@@ -29,6 +29,13 @@ class Container(Widget):
 
         self.widgets = []
 
+        initialWidgets = kwargs.pop('contents', [])
+        for widget in initialWidgets:
+            if type(widget) == type([]):
+                self.add(*widget)
+            else:
+                self.add(widget)
+
     def handleEvent(self, event):
         # handle mouse events by deciding which widgets are in the clicked area
         for widget in self.widgets:
@@ -128,12 +135,12 @@ class Container(Widget):
 
 class ArrangedContainer(Container):
     def __init__(self, *args, **kwargs):
-        Container.__init__(self, *args, **kwargs)
-        self.last = 0
+        self._last = 0
         if kwargs.has_key('padding'):
             self.padding = kwargs['padding']
         else:
             self.padding = (0, 0)
+        Container.__init__(self, *args, **kwargs)
 
     def _findPosition(self, widget):
         raise NotImplementedError
@@ -152,21 +159,21 @@ class ArrangedContainer(Container):
 
     def setPosition(self, position):
         Container.setPosition(self, position)
-        self.last = 0
+        self._last = 0
         for widget in self.widgets:
             if widget.isVisible():
                 widget.setPosition(self._findPosition(widget))
 
 class HorizontalContainer(ArrangedContainer):
     def _findPosition(self, widget):
-        oldLast = self.last + self.padding[0]
-        self.last += widget.rect.width + self.padding[0]
+        oldLast = self._last + self.padding[0]
+        self._last += widget.rect.width + self.padding[0]
         return (oldLast + self.rect.left, self.rect.top + self.padding[1])
 
 class VerticalContainer(ArrangedContainer):
     def _findPosition(self, widget):
-        oldLast = self.last + self.padding[1]
-        self.last += widget.rect.height + self.padding[1]
+        oldLast = self._last + self.padding[1]
+        self._last += widget.rect.height + self.padding[1]
         return (self.rect.left + self.padding[0], oldLast + self.rect.top)
 
 class TabbedContainer(Container):

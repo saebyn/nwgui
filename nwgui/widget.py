@@ -20,6 +20,10 @@ class Widget(BaseWidget):
     def __init__(self, width, height, *args, **kwargs):
         super(Widget, self).__init__(*args, **kwargs)
 
+        if kwargs.has_key('name'):
+            name = kwargs.pop('name')
+            self.setName(name)
+
         self.rect = pygame.Rect((0,0), (width, height))
 
         self.sheet = self._renderer.getSpriteSource('gui')

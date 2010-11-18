@@ -9,9 +9,8 @@ class List(VerticalContainer):
         kwargs['padding'] = (5, 5)
         kwargs['border'] = (1, (0, 0, 0))
         VerticalContainer.__init__(self, *args, **kwargs)
-        self.items = {}
-        self.itemOrder = []
-        # This is the index (in itemOrder) of the item at the top of the
+        self.items = []
+        # This is the index of the item at the top of the
         # displayed list of items. It is None if there are no items.
         self.listItemViewedIndex = None
         self.selectedItem = None
@@ -23,11 +22,7 @@ class List(VerticalContainer):
 
     def add(self, name, widget):
         VerticalContainer.add(self, widget)
-        # TODO replace this with a ordered dict
-        if self.items.has_key(name):
-            raise KeyError("Item already added.")
-        self.items[name] = widget
-        self.itemOrder.append(name)
+        self.items.append((name, widget))
         if self.listItemViewedIndex is None:
             self.listItemViewedIndex = 0
 
@@ -35,38 +30,58 @@ class List(VerticalContainer):
         """
         Remove all items from the list.
         """
-        for item in self.items.keys():
-            self.remove(item)
+        names = map(lambda nw: nw[0], self.items)
+        for name in names:
+            self.remove(name)
+
+    def _find(self, name):
+        """
+        Returns the widget of the first item in self.items with the matching name.
+        """
+        return filter(lambda nw: nw[0] == name, self.items)[0][1]
+
+    def _has(self, name):
+        """
+        Returns True if one of the items in self.items has the name.
+        """
+        return name in map(lambda nw: nw[0], self.items)
+
+    def _index(self, value):
+        return map(lambda nw: nw[1], self.items).index(value)
 
     def remove(self, name):
-        widget = self.items[name]
+        widget = self._find(name)
 
         VerticalContainer.remove(self, widget)
-        del self.items[name]
-        self.itemOrder.remove(name)
 
-        if self.listItemViewedIndex >= len(self.itemOrder):
-            self.listItemViewedIndex = len(self.itemOrder) - 1
+        self.items.remove((name, widget))
+
+        if self.listItemViewedIndex >= len(self.items):
+            self.listItemViewedIndex = len(self.items) - 1
 
         if self.listItemViewedIndex == -1:
             self.listItemViewedIndex = None
 
     def getSelected(self):
+        return self.items[self.selectedItem][0]
+
+    def getSelectedIndex(self):
         return self.selectedItem
 
     def hasSelected(self):
         return self.selectedItem is not None
 
-    def select(self, itemName):
+    def select(self, itemIndex):
         if self.selectedItem is not None:
             self.unselect(self.selectedItem)
 
-        self.selectedItem = itemName
-        self.items[itemName].setColor((255, 255, 255))
-        self.items[itemName].setBackground((0, 0, 100))
+        self.selectedItem = itemIndex
+        name, widget = self.items[itemIndex]
+        widget.setColor((255, 255, 255))
+        widget.setBackground((0, 0, 100))
 
         if self.callback is not None:
-            self.callback(itemName)
+            self.callback(name, itemIndex)
 
     def setSelectCallback(self, callback):
         self.callback = callback
@@ -74,18 +89,21 @@ class List(VerticalContainer):
     def clearSelectCallback(self):
         self.callback = None
 
-    def unselect(self, itemName=None):
+    def unselect(self, itemIndex=None):
         self.selectedItem = None
 
-        def removeFormatting(name):
-            self.items[name].setBackground((255, 255, 255))
-            self.items[name].setColor((0, 0, 0))
+        def removeFormatting(widget):
+            widget.setBackground((255, 255, 255))
+            widget.setColor((0, 0, 0))
 
-        if itemName is None:
-            for name in self.itemOrder:
-                removeFormatting(name)
-        elif self.items.has_key(itemName):
-            removeFormatting(itemName)
+        if itemIndex is None:
+            for name, widget in self.items:
+                removeFormatting(widget)
+        else:
+            try:
+                removeFormatting(self.items[itemIndex][1])
+            except IndexError:
+                pass
 
     def update(self, *args):
         VerticalContainer.update(self, *args)
@@ -95,7 +113,7 @@ class List(VerticalContainer):
             self._dirty = False
 
     def _refreshVisibleItems(self):
-        for key, item in self.items.iteritems():
+        for key, item in self.items:
             item.hide()
 
         shownItems = self._findItemsThatFit(self.listItemViewedIndex)
@@ -108,17 +126,17 @@ class List(VerticalContainer):
     def _findItemsThatFit(self, fromIndex):
         """
         Returns a list of items (values from self.items) starting from fromIndex
-        in self.itemOrder, until the accumulated height of the items no longer
+        in self.items, until the accumulated height of the items no longer
         fits in self.rect.
         """
         height = self.padding[1]
         itemsThatFit = []
-        for item in self.itemOrder[fromIndex:]:
-            height += self.items[item].rect.height + self.padding[1]
+        for itemName, widget in self.items[fromIndex:]:
+            height += widget.rect.height + self.padding[1]
             if height > self.rect.height:
                 break
             else:
-                itemsThatFit.append(self.items[item])
+                itemsThatFit.append(widget)
 
         return itemsThatFit
 
@@ -136,7 +154,7 @@ class List(VerticalContainer):
             return
 
         # don't bother trying to scroll down if we're already at the bottom
-        if self.listItemViewedIndex < len(self.itemOrder) - 1:
+        if self.listItemViewedIndex < len(self.items) - 1:
             self.listItemViewedIndex += 1
             self._refreshVisibleItems()
 
@@ -148,9 +166,9 @@ class List(VerticalContainer):
 
         # find clicks on children, do select
         if event.type == MOUSEBUTTONDOWN:
-            for name, item in self.items.iteritems():
-                if item.rect.contains(pygame.Rect(pygame.mouse.get_pos(), (1, 1))):
-                    self.select(name)
+            for index in xrange(0, len(self.items)):
+                if self.items[index][1].rect.collidepoint(pygame.mouse.get_pos()):
+                    self.select(index)
                     return
             
             self.unselect()
@@ -158,19 +176,19 @@ class List(VerticalContainer):
         elif event.type == KEYDOWN:
             if event.key == K_UP:
                 try:
-                    index = self.itemOrder.index(self.selectedItem) - 1
+                    index = self.selectedItem - 1
                 except ValueError:
                     return
 
                 if index >= 0:
                     self.scrollUp()
-                    self.select(self.itemOrder[index])
+                    self.select(index)
             elif event.key == K_DOWN:
                 try:
-                    index = self.itemOrder.index(self.selectedItem) + 1
+                    index = self.selectedItem + 1
                 except ValueError:
                     return
 
-                if index < len(self.itemOrder):
+                if index < len(self.items):
                     self.scrollDown()
-                    self.select(self.itemOrder[index])
+                    self.select(index)
