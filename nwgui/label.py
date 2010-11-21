@@ -3,8 +3,9 @@ import pygame
 
 from nwgui.widget import Widget
 
+
 class Label(Widget):
-    def __init__(self, text, color=(0, 0, 0), background=(255, 255, 255), 
+    def __init__(self, text, color=(0, 0, 0), background=(255, 255, 255),
                        padding=(0, 0), width=None, height=None, **kwargs):
         Widget.__init__(self, 1, 1, **kwargs)
 
@@ -37,7 +38,8 @@ class Label(Widget):
             self._dirty = False
 
     def _render(self):
-        renderedText = self.font.render(self.text, 1, self.color, self.background)
+        renderedText = self.font.render(self.text, 1,
+                                        self.color, self.background)
 
         if self.width is None:
             width = renderedText.get_width()

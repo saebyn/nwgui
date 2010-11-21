@@ -5,11 +5,12 @@ from nwgui.widget import Widget
 from nwgui.container import HorizontalContainer
 from nwgui.button import SpriteButton
 
+
 class ButtonBar(Widget):
     """
     A horizontal bar which contains one or more banks of buttons.
 
-    A bank is a visible set of buttons that are associated with a single key. 
+    A bank is a visible set of buttons that are associated with a single key.
     Switching between banks causes the current set of displayed buttons to
     be hidden and the new bank of buttons to be shown instead.
 
@@ -32,10 +33,12 @@ class ButtonBar(Widget):
     >>> buttonbar.getCurrentBank()
     "main"
     >>> buttonbar.getButtons(bank="main")
-    [("spriteName1", None), ("spriteName2", None), ("spriteName4", None), ("spriteName6", <function <lambda> at 0x...>)]
+    [("spriteName1", None), ("spriteName2", None), ("spriteName4", None),
+     ("spriteName6", <function <lambda> at 0x...>)]
     >>> buttonbar.switchBank("second")
     >>> buttonbar.getButtons()
-    [("spriteName3", <function <lambda> at 0x...>), ("spriteName5", <function <lambda> at 0x...>)]
+    [("spriteName3", <function <lambda> at 0x...>),
+     ("spriteName5", <function <lambda> at 0x...>)]
     >>> buttonbar.activate(1)
     None
     >>> buttonbar.activate(2)
@@ -47,20 +50,22 @@ class ButtonBar(Widget):
         self._currentBank = None
         self._bankContainers = {}
         self.image = pygame.Surface((1, 1))
-    
+
     def addBank(self, name):
         self._banks[name] = []
 
         if self._currentBank is not None:
             self._bankContainers[self._currentBank].hide()
 
-        self._bankContainers[name] = HorizontalContainer(self.rect.width, self.rect.height, root=self.root)
+        self._bankContainers[name] = HorizontalContainer(self.rect.width,
+                                                         self.rect.height,
+                                                         root=self.root)
         self._bankContainers[name].setParent(self)
         self._bankContainers[name].setPosition(self.rect.topleft)
         self._currentBank = name
 
     def switchBank(self, name):
-        if not self._banks.has_key(name):
+        if name not in self._banks:
             raise KeyError("No such bank: %s" % (name,))
 
         self._bankContainers[name].hide()

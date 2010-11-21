@@ -1,8 +1,10 @@
 
-import os, os.path
+import os
+import os.path
 
 from nwgui.list import List
 from nwgui.label import Label
+
 
 class FileBrowser(List):
     def __init__(self, path, *args, **kwargs):

@@ -1,6 +1,7 @@
 
 from nwgui.renderers.abstract_renderer import AbstractRenderer
 
+
 class DummyRenderer(AbstractRenderer):
     def __init__(self):
         self.layers = {}
@@ -36,8 +37,8 @@ class DummyRenderer(AbstractRenderer):
             if widget in value:
                 self.layers[key].remove(widget)
                 break
-        
-        if not self.layers.has_key(layer):
+
+        if layer not in self.layers:
             self.layers[layer] = []
 
         self.layers[layer].append(widget)

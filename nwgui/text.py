@@ -8,8 +8,9 @@ from nwgui.container import Container
 from nwgui.image import Image
 from nwgui.label import Label
 
+
 class Text(Container):
-    def __init__(self, text, width, height, background=(255, 255, 255), 
+    def __init__(self, text, width, height, background=(255, 255, 255),
                        *args, **kwargs):
         kwargs['border'] = (1, (0, 0, 0))
         Container.__init__(self, width, height, *args, **kwargs)
@@ -17,7 +18,7 @@ class Text(Container):
         self.text = ""
 
         self.textDisplayedBeginIndex = 0
-        
+
         self.cursor = Image('textcursor', root=self.root)
         self.add(self.cursor)
 
@@ -26,8 +27,11 @@ class Text(Container):
 
     @property
     def textDisplayedEndIndex(self):
-        for index in xrange(len(self.text), self.textDisplayedBeginIndex + 1, -1):
-            if self.label.font.size(self.text[self.textDisplayedBeginIndex:index])[0] < self.rect.width - 4:
+        for index in xrange(len(self.text),
+                            self.textDisplayedBeginIndex + 1,
+                            -1):
+            text = self.text[self.textDisplayedBeginIndex:index]
+            if self.label.font.size(text)[0] < self.rect.width - 4:
                 return index
 
         return self.textDisplayedBeginIndex + 1
@@ -76,7 +80,7 @@ class Text(Container):
 
         if self.cursor.rect.right > self.rect.right:
             self.cursor.rect.right = self.rect.right
-        
+
     def moveCursorLeft(self):
         if self.cursorPosition == 0:
             return

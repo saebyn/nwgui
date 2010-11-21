@@ -3,6 +3,7 @@ import pygame
 
 from nwgui.container import AbsoluteContainer
 
+
 class AbstractGUI(object):
     def __init__(self, game):
         raise NotImplementedError
@@ -34,13 +35,14 @@ class AbstractGUI(object):
     def isControlledPosition(self, position):
         raise NotImplementedError
 
+
 class GUI(AbsoluteContainer, AbstractGUI):
     def __init__(self, game):
         self._game = game
         AbsoluteContainer.__init__(self, game.screen.get_width(),
                                          game.screen.get_height(),
                                          self, root=self)
-        self.image = pygame.Surface((0,0))
+        self.image = pygame.Surface((0, 0))
         self.active = None
         self.names = {}
 

@@ -7,17 +7,18 @@ import operator
 from nwgui.widget import Widget
 from nwgui.tab import Tab
 
+
 class Container(Widget):
     def __init__(self, width, height, *args, **kwargs):
         self.image = pygame.Surface((width, height))
         Widget.__init__(self, width, height, *args, **kwargs)
 
-        if kwargs.has_key('background'):
+        if 'background' in kwargs:
             background = kwargs['background']
         else:
             background = (255, 255, 255)
 
-        if kwargs.has_key('border'):
+        if 'border' in kwargs:
             border = kwargs['border']
         else:
             border = None
@@ -133,10 +134,11 @@ class Container(Widget):
         widget.setParent(self)
         widget.updateLayer()
 
+
 class ArrangedContainer(Container):
     def __init__(self, *args, **kwargs):
         self._last = 0
-        if kwargs.has_key('padding'):
+        if 'padding' in kwargs:
             self.padding = kwargs['padding']
         else:
             self.padding = (0, 0)
@@ -164,17 +166,20 @@ class ArrangedContainer(Container):
             if widget.isVisible():
                 widget.setPosition(self._findPosition(widget))
 
+
 class HorizontalContainer(ArrangedContainer):
     def _findPosition(self, widget):
         oldLast = self._last + self.padding[0]
         self._last += widget.rect.width + self.padding[0]
         return (oldLast + self.rect.left, self.rect.top + self.padding[1])
 
+
 class VerticalContainer(ArrangedContainer):
     def _findPosition(self, widget):
         oldLast = self._last + self.padding[1]
         self._last += widget.rect.height + self.padding[1]
         return (self.rect.left + self.padding[0], oldLast + self.rect.top)
+
 
 class TabbedContainer(Container):
     def __init__(self, width, height, *args, **kwargs):
@@ -184,15 +189,17 @@ class TabbedContainer(Container):
         self.tabSelected = None
         self.tabChanged = False
 
-        if kwargs.has_key('tabMargin'):
+        if 'tabMargin' in kwargs:
             tabMargin = kwargs['tabMargin']
         else:
             tabMargin = 3
 
-        self.tabRow = HorizontalContainer(width, 40, root=self.root, padding=(tabMargin, 0))
+        self.tabRow = HorizontalContainer(width, 40,
+                                          root=self.root,
+                                          padding=(tabMargin, 0))
         Container.add(self, self.tabRow)
         self.image = pygame.Surface(self.rect.size)
-        self.image.fill( (255, 255, 255) )
+        self.image.fill((255, 255, 255))
 
     def showPage(self, tabName):
         self.tabSelected = tabName
@@ -212,7 +219,8 @@ class TabbedContainer(Container):
         widget.setPosition(self.rect.topleft)
 
         # add the extra widgets needed for the tabs
-        tab = Tab(self, tabName, root=self.root, padding=(15, 15), background=(100, 100, 100))
+        tab = Tab(self, tabName, root=self.root,
+                  padding=(15, 15), background=(100, 100, 100))
         self.tabRow.add(tab)
 
     def remove(self, tabName):
@@ -250,6 +258,7 @@ class TabbedContainer(Container):
             self.showPage(self.tabSelected)
             self.tabChanged = False
             self.tabRow.moveToFront()
+
 
 class AbsoluteContainer(Container):
     def add(self, widget, x, y):

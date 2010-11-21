@@ -3,6 +3,7 @@ from pygame.locals import MOUSEBUTTONDOWN
 
 from nwgui.label import Label
 
+
 class Tab(Label):
     def __init__(self, tabbedPages, tabName, *args, **kwargs):
         Label.__init__(self, tabName, *args, **kwargs)

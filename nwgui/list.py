@@ -4,6 +4,7 @@ from pygame.locals import *
 
 from nwgui.container import VerticalContainer
 
+
 class List(VerticalContainer):
     def __init__(self, *args, **kwargs):
         kwargs['padding'] = (5, 5)
@@ -36,7 +37,8 @@ class List(VerticalContainer):
 
     def _find(self, name):
         """
-        Returns the widget of the first item in self.items with the matching name.
+        Returns the widget of the first item in self.items with the matching
+        name.
         """
         return filter(lambda nw: nw[0] == name, self.items)[0][1]
 
@@ -125,9 +127,9 @@ class List(VerticalContainer):
 
     def _findItemsThatFit(self, fromIndex):
         """
-        Returns a list of items (values from self.items) starting from fromIndex
-        in self.items, until the accumulated height of the items no longer
-        fits in self.rect.
+        Returns a list of items (values from self.items) starting from
+        fromIndex in self.items, until the accumulated height of the items no
+        longer fits in self.rect.
         """
         height = self.padding[1]
         itemsThatFit = []
@@ -141,7 +143,8 @@ class List(VerticalContainer):
         return itemsThatFit
 
     def scrollUp(self):
-        if self.listItemViewedIndex is None:  # this implies that there are no items
+        if self.listItemViewedIndex is None:
+            # this implies that there are no items
             return
 
         # don't bother trying to scroll up if we're already at the top
@@ -150,7 +153,8 @@ class List(VerticalContainer):
             self._refreshVisibleItems()
 
     def scrollDown(self):
-        if self.listItemViewedIndex is None:  # this implies that there are no items
+        if self.listItemViewedIndex is None:
+            # this implies that there are no items
             return
 
         # don't bother trying to scroll down if we're already at the bottom
@@ -166,11 +170,12 @@ class List(VerticalContainer):
 
         # find clicks on children, do select
         if event.type == MOUSEBUTTONDOWN:
+            position = pygame.mouse.get_pos()
             for index in xrange(0, len(self.items)):
-                if self.items[index][1].rect.collidepoint(pygame.mouse.get_pos()):
+                if self.items[index][1].rect.collidepoint(position):
                     self.select(index)
                     return
-            
+
             self.unselect()
         # handle keys up and down, do scroll/select
         elif event.type == KEYDOWN:

@@ -3,6 +3,7 @@ import pygame
 
 from nwgui.renderers.abstract_renderer import AbstractRenderer
 
+
 class PyGameRenderer(AbstractRenderer):
     def __init__(self, game):
         self.game = game

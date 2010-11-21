@@ -3,6 +3,7 @@ import pygame
 
 from nwgui.widget import Widget
 
+
 class DirectImage(Widget):
     def __init__(self, image, width, height, *args, **kwargs):
         Widget.__init__(self, width, height, *args, **kwargs)
@@ -24,6 +25,7 @@ class DirectImage(Widget):
             self.image = background
         else:
             self.image = image
+
 
 class Image(Widget):
     def __init__(self, sheetName, *args, **kwargs):

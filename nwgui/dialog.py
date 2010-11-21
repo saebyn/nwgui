@@ -6,6 +6,7 @@ from nwgui.widget import Widget
 from nwgui.label import Label
 from nwgui.button import SpriteButton
 
+
 class Dialog(Widget):
     def __init__(self, *args, **kwargs):
         super(Dialog, self).__init__(*args, **kwargs)
@@ -28,8 +29,9 @@ class Dialog(Widget):
 
         self._closeButton = SpriteButton('x16', closeCallback, root=self.root)
         self._closeButton.setParent(self)
-        self._closeButton.setPosition((self.rect.right - self._closeButton.rect.width - 5,
-                                       self.rect.top + 5))
+        buttonPosition = (self.rect.right - self._closeButton.rect.width - 5,
+                          self.rect.top + 5)
+        self._closeButton.setPosition(buttonPosition)
 
         self.moveToFront()
 
@@ -52,7 +54,7 @@ class Dialog(Widget):
         self._closeButton.moveToFront()
         if self._contents is not None:
             self._contents.moveToFront()
-    
+
     def moveToBack(self):
         if self._contents is not None:
             self._contents.moveToBack()
@@ -78,6 +80,6 @@ class Dialog(Widget):
         self._contents.setParent(self)
         self._contents.setPosition((self.rect.left + 5,
                                     self.rect.top + \
-                                    max(self._label.rect.height, 
+                                    max(self._label.rect.height,
                                         self._closeButton.rect.height) + 5))
         self._contents.updateLayer()

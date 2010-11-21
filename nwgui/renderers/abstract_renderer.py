@@ -1,4 +1,5 @@
 
+
 class AbstractRenderer(object):
     def getSpriteSource(self, name):
         raise NotImplementedError

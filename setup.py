@@ -13,4 +13,3 @@ setup(
     author = 'John Weaver',
     author_email = 'john@pledge4code.com',
 )
-

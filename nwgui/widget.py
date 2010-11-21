@@ -3,12 +3,14 @@ import pygame
 
 from nwgui.renderers.basewidget import BaseWidget
 
+
 def deferUntilParent(method):
     def inner(*args, **kwargs):
         self = args[0]
         if self.parent is not None:
             method(*args, **kwargs)
         else:
+
             def deferrable():
                 method(*args, **kwargs)
 
@@ -16,19 +18,20 @@ def deferUntilParent(method):
 
     return inner
 
+
 class Widget(BaseWidget):
     def __init__(self, width, height, *args, **kwargs):
         super(Widget, self).__init__(*args, **kwargs)
 
-        if kwargs.has_key('name'):
+        if 'name' in kwargs:
             name = kwargs.pop('name')
             self.setName(name)
 
-        self.rect = pygame.Rect((0,0), (width, height))
+        self.rect = pygame.Rect((0, 0), (width, height))
 
         self.sheet = self._renderer.getSpriteSource('gui')
 
-        if kwargs.has_key('fontSize'):
+        if 'fontSize' in kwargs:
             self.fontSize = kwargs['fontSize']
         else:
             self.fontSize = 16
@@ -43,7 +46,7 @@ class Widget(BaseWidget):
     def setName(self, name, widget=None):
         if widget is None:
             widget = self
-        
+
         self.root.setName(name, widget)
 
     def handleEvent(self, event):
@@ -66,8 +69,9 @@ class Widget(BaseWidget):
     @deferUntilParent
     def updateLayer(self):
         """
-        Update the layer count of this widget. This is also when this widget is added as a
-        sprite to the game. This should be called only by the GUI class.
+        Update the layer count of this widget. This is also when this widget is
+        added as a sprite to the game. This should be called only by the GUI
+        class.
         """
         self.layer = self.parent.getLayer() + 1
         if self.alive():
